@@ -14,7 +14,7 @@ public class Utilities {
 
 
     /**
-     * Returns a function which is a deepcopy of a given function.
+     * Returns a function which is a deep copy of a given function.
      * @param function function to copy
      * @return new function
      */
@@ -24,10 +24,9 @@ public class Utilities {
         return newFunction;
     }
 
-
     /**
-     * Checks whether given function has an unit clause or not.
-     * This method returns an int value which is an unit clause index.
+     * Checks whether given function has a unit clause or not.
+     * This method returns an int value which is a unit clause index.
      * If no unit clause has found returns -1.
      * @param function function to check
      * @return int value
@@ -44,17 +43,14 @@ public class Utilities {
      * Returns new function without unit clauses.
      * Copies input function and modifies the copy.
      * @param function function to process
-     * @return new function
      */
-    public static ArrayList<ArrayList<Integer>> unitPropagation(ArrayList<ArrayList<Integer>> function) {
+    public static void unitPropagation(ArrayList<ArrayList<Integer>> function) {
         int unitClauseIndex = getUnitClauseIndex(function);
 
         while (getUnitClauseIndex(function) != -1) {
             processUnitClause(function, unitClauseIndex);
             unitClauseIndex = getUnitClauseIndex(function);
         }
-
-        return function;
     }
 
     /**
@@ -62,25 +58,31 @@ public class Utilities {
      * Also removes all arrays which have unit clause's literal
      * and all reverse literals from all clauses.
      * @param function function to process
-     * @param index index of an unit clause in a given function
-     * @return modified input function
+     * @param index index of a unit clause in a given function
+
      */
-    public static ArrayList<ArrayList<Integer>> processUnitClause(ArrayList<ArrayList<Integer>> function, int index){
-        if (index < 0) return function;
+    public static void processUnitClause(ArrayList<ArrayList<Integer>> function, int index){
+        assert index > 0;
 
         int unitLiteral = function.get(index).get(0);
-
         function.removeIf(array -> array.contains(unitLiteral));
         function.forEach(array -> array.removeAll(Collections.singleton(-unitLiteral)));
-
-        return function;
     }
 
-
+    /**
+     * Returns a literal from a function.
+     * @param function boolean function
+     * @return literal
+     */
     public static Integer chooseLiteral(ArrayList<ArrayList<Integer>> function) {
         return  function.get(0).get(0);
     }
 
+    /**
+     * Returns true if function has empty clause and false otherwise.
+     * @param function function to check
+     * @return boolean value
+     */
     public static boolean hasEmptyClause(ArrayList<ArrayList<Integer>> function) {
         for (ArrayList<Integer> array :
                 function) {
@@ -89,14 +91,23 @@ public class Utilities {
         return false;
     }
 
+    /***
+     * Returns new function with a new unit clause which consists of a given literal.
+     * @param function ArrayList<ArrayList<Integer>>
+     * @param literal int
+     * @return new function
+     */
     public static ArrayList<ArrayList<Integer>> add(ArrayList<ArrayList<Integer>> function, int literal) {
-        ArrayList<ArrayList<Integer>> resultFunction = new ArrayList<>();
-        resultFunction = copyFunction(function);
+        ArrayList<ArrayList<Integer>> resultFunction = copyFunction(function);
         resultFunction.add(new ArrayList<>(Collections.singleton(literal)));
         return resultFunction;
     }
 
-
+    /**
+     * Returns a function loaded from a file.
+     * @param fileName String
+     * @return new function
+     */
     public static ArrayList<ArrayList<Integer>> loadFromFile(String fileName){
 
         List<String> lines;
@@ -104,7 +115,12 @@ public class Utilities {
 
         try {
             lines = Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8);
-            lines.remove(0);
+            lines.removeIf(line -> line.length() == 0);
+            lines.removeIf(line ->
+                    line.charAt(0) == 'c' ||
+                    line.charAt(0) == 'p' ||
+                    line.charAt(0) == '%' ||
+                    line.charAt(0) == '0');
         } catch (IOException e) {
             System.out.println("Wrong file.");
             throw new RuntimeException(e);
