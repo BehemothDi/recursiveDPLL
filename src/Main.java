@@ -14,7 +14,7 @@ public class Main {
         ArrayList<String> inputList = new ArrayList<>();
         ArrayList<Double> timeList = new ArrayList<>();
 
-        try (Stream<Path> paths = Files.walk(Paths.get("src/largeInputs/"))) {
+        try (Stream<Path> paths = Files.walk(Paths.get("src/inputs/"))) {
             paths
                     .filter(Files::isRegularFile)
                     .forEach(file -> inputList.add(file.toString()));
