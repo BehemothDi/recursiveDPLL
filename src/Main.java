@@ -14,14 +14,13 @@ public class Main {
         ArrayList<String> inputList = new ArrayList<>();
         ArrayList<Double> timeList = new ArrayList<>();
 
-        try (Stream<Path> paths = Files.walk(Paths.get("src/inputs/"))) {
+        try (Stream<Path> paths = Files.walk(Paths.get("src/largeInputs/"))) {
             paths
                     .filter(Files::isRegularFile)
                     .forEach(file -> inputList.add(file.toString()));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
         inputList.forEach(fileName -> {
 
@@ -45,6 +44,7 @@ public class Main {
 
     static boolean dpll(ArrayList<ArrayList<Integer>> function) {
         unitPropagation(function);
+       // pureLiterals(function);
 
         if (function.size() == 0) return true;
         else if (hasEmptyClause(function)) return false;

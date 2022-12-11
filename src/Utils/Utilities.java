@@ -4,9 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -137,5 +135,23 @@ public class Utilities {
 
         return function;
     }
+
+    /**
+     * Returns a function without pure clauses which had pure literals.
+     * @param function function to process
+     * @return modified function
+     */
+    public static ArrayList<ArrayList<Integer>> pureLiterals(ArrayList<ArrayList<Integer>> function) {
+
+        HashSet<Integer> literals = new HashSet<>();
+        HashSet<Integer> pureLiterals = new HashSet<>();
+
+        function.forEach(literals::addAll);
+        literals.forEach(l -> {if (!literals.contains(-l)) pureLiterals.add(l);});
+        pureLiterals.forEach(literal -> function.removeIf(clause -> clause.contains(literal)));
+
+        return function;
+    }
+
 
 }
