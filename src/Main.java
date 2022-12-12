@@ -44,7 +44,7 @@ public class Main {
 
     static boolean dpll(ArrayList<ArrayList<Integer>> function) {
         unitPropagation(function);
-       // pureLiterals(function);
+        //pureLiterals(function);
 
         if (function.size() == 0) return true;
         else if (hasEmptyClause(function)) return false;
